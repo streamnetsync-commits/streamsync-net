@@ -730,3 +730,132 @@ button {
     position: absolute;
 
     top: -13
+/* =========================
+   MOBILE MENU
+   ========================= */
+
+.mobile-menu-btn {
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--dark);
+
+    font-size: 26px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   SCROLL EFFECT
+   ========================= */
+
+.header.scrolled {
+    box-shadow: 0 8px 30px rgba(10, 40, 90, 0.08);
+}
+
+
+/* =========================
+   REVEAL ANIMATION
+   ========================= */
+
+.reveal {
+    opacity: 0;
+
+    transform: translateY(25px);
+
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+}
+
+.revealed {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* =========================
+   MOBILE NAVIGATION
+   ========================= */
+
+@media (max-width: 1000px) {
+
+    .mobile-menu-btn {
+        display: block;
+
+        order: 3;
+    }
+
+    .nav-container {
+        position: relative;
+    }
+
+    .navigation {
+        display: none;
+
+        position: absolute;
+
+        top: 78px;
+
+        left: 0;
+        right: 0;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+        padding: 15px;
+
+        background: white;
+
+        border-bottom: 1px solid var(--border);
+
+        box-shadow: 0 15px 30px rgba(10, 40, 90, 0.08);
+    }
+
+    .navigation.mobile-active {
+        display: flex;
+    }
+
+    .navigation a {
+        padding: 14px;
+
+        border-radius: 8px;
+    }
+
+    .navigation a:hover {
+        background: var(--light);
+    }
+
+    .nav-actions {
+        display: none;
+    }
+
+    .nav-actions.mobile-active {
+        display: flex;
+
+        position: absolute;
+
+        top: 330px;
+
+        left: 15px;
+        right: 15px;
+
+        padding: 15px;
+
+        background: white;
+
+        border-bottom: 1px solid var(--border);
+
+        box-shadow: 0 15px 30px rgba(10, 40, 90, 0.08);
+
+        justify-content: center;
+    }
+}
