@@ -1,23 +1,57 @@
 /* =========================================================
    STREAMSYNC NET
    Main JavaScript
-   ========================================================= */
+   Supabase + Website Functions
+========================================================= */
+
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+========================================================= */
+
+const SUPABASE_URL =
+    "PASTE_YOUR_PROJECT_URL_HERE";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+
+/* =========================================================
+   DOM READY
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
+
 
     /* =====================================================
        MOBILE MENU
     ===================================================== */
 
-    const header = document.querySelector(".header");
-    const navigation = document.querySelector(".navigation");
-    const navActions = document.querySelector(".nav-actions");
+    const header =
+        document.querySelector(".header");
+
+    const navigation =
+        document.querySelector(".navigation");
+
+    const navActions =
+        document.querySelector(".nav-actions");
+
 
     if (header && navigation) {
 
-        const menuButton = document.createElement("button");
+        const menuButton =
+            document.createElement("button");
 
-        menuButton.className = "mobile-menu-btn";
+        menuButton.className =
+            "mobile-menu-btn";
 
         menuButton.setAttribute(
             "aria-label",
@@ -26,68 +60,96 @@ document.addEventListener("DOMContentLoaded", function () {
 
         menuButton.innerHTML = "☰";
 
+
         const navContainer =
             header.querySelector(".nav-container");
+
 
         if (navContainer) {
             navContainer.appendChild(menuButton);
         }
 
-        menuButton.addEventListener("click", function () {
 
-            navigation.classList.toggle("mobile-active");
+        menuButton.addEventListener(
+            "click",
+            function () {
 
-            if (navActions) {
-                navActions.classList.toggle("mobile-active");
+                navigation.classList.toggle(
+                    "mobile-active"
+                );
+
+
+                if (navActions) {
+
+                    navActions.classList.toggle(
+                        "mobile-active"
+                    );
+
+                }
+
+
+                const menuOpen =
+                    navigation.classList.contains(
+                        "mobile-active"
+                    );
+
+
+                menuButton.innerHTML =
+                    menuOpen ? "✕" : "☰";
+
             }
+        );
 
-            const menuOpen =
-                navigation.classList.contains("mobile-active");
-
-            menuButton.innerHTML =
-                menuOpen ? "✕" : "☰";
-
-        });
-
-
-        /* Close menu after clicking a navigation link */
 
         const navigationLinks =
             navigation.querySelectorAll("a");
 
+
         navigationLinks.forEach(function (link) {
 
-            link.addEventListener("click", function () {
+            link.addEventListener(
+                "click",
+                function () {
 
-                navigation.classList.remove(
-                    "mobile-active"
-                );
-
-                if (navActions) {
-                    navActions.classList.remove(
+                    navigation.classList.remove(
                         "mobile-active"
                     );
+
+
+                    if (navActions) {
+
+                        navActions.classList.remove(
+                            "mobile-active"
+                        );
+
+                    }
+
+
+                    menuButton.innerHTML = "☰";
+
                 }
-
-                menuButton.innerHTML = "☰";
-
-            });
+            );
 
         });
 
     }
 
 
+
     /* =====================================================
        HEADER SCROLL EFFECT
     ===================================================== */
 
-    const handleHeaderScroll = function () {
+    function handleHeaderScroll() {
 
         const currentHeader =
             document.querySelector(".header");
 
-        if (!currentHeader) return;
+
+        if (!currentHeader) {
+            return;
+        }
+
 
         if (window.scrollY > 30) {
 
@@ -99,14 +161,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-    };
+    }
+
 
     window.addEventListener(
         "scroll",
         handleHeaderScroll
     );
 
+
     handleHeaderScroll();
+
 
 
     /* =====================================================
@@ -114,39 +179,51 @@ document.addEventListener("DOMContentLoaded", function () {
     ===================================================== */
 
     const anchorLinks =
-        document.querySelectorAll('a[href^="#"]');
+        document.querySelectorAll(
+            'a[href^="#"]'
+        );
+
 
     anchorLinks.forEach(function (link) {
 
-        link.addEventListener("click", function (event) {
+        link.addEventListener(
+            "click",
+            function (event) {
 
-            const targetId =
-                this.getAttribute("href");
+                const targetId =
+                    this.getAttribute("href");
 
-            if (
-                !targetId ||
-                targetId === "#"
-            ) {
-                return;
+
+                if (
+                    !targetId ||
+                    targetId === "#"
+                ) {
+                    return;
+                }
+
+
+                const target =
+                    document.querySelector(targetId);
+
+
+                if (!target) {
+                    return;
+                }
+
+
+                event.preventDefault();
+
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
             }
-
-            const target =
-                document.querySelector(targetId);
-
-            if (!target) {
-                return;
-            }
-
-            event.preventDefault();
-
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        });
+        );
 
     });
+
 
 
     /* =====================================================
@@ -158,40 +235,47 @@ document.addEventListener("DOMContentLoaded", function () {
             ".package-card, .service-card, .benefit-card, .step"
         );
 
-    const revealObserver =
-        new IntersectionObserver(
-            function (entries) {
 
-                entries.forEach(function (entry) {
+    if ("IntersectionObserver" in window) {
 
-                    if (entry.isIntersecting) {
+        const revealObserver =
+            new IntersectionObserver(
+                function (entries) {
 
-                        entry.target.classList.add(
-                            "revealed"
-                        );
+                    entries.forEach(function (entry) {
 
-                        revealObserver.unobserve(
-                            entry.target
-                        );
+                        if (entry.isIntersecting) {
 
-                    }
-
-                });
-
-            },
-            {
-                threshold: 0.12
-            }
-        );
+                            entry.target.classList.add(
+                                "revealed"
+                            );
 
 
-    revealElements.forEach(function (element) {
+                            revealObserver.unobserve(
+                                entry.target
+                            );
 
-        element.classList.add("reveal");
+                        }
 
-        revealObserver.observe(element);
+                    });
 
-    });
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        revealElements.forEach(function (element) {
+
+            element.classList.add("reveal");
+
+            revealObserver.observe(element);
+
+        });
+
+    }
+
 
 
     /* =====================================================
@@ -199,7 +283,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ===================================================== */
 
     const coverageForm =
-        document.querySelector(".coverage-form");
+        document.querySelector(
+            ".coverage-form"
+        );
+
 
     if (coverageForm) {
 
@@ -209,26 +296,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 event.preventDefault();
 
+
                 const input =
                     coverageForm.querySelector(
                         "input"
                     );
 
+
                 const area =
-                    input ? input.value.trim() : "";
+                    input
+                        ? input.value.trim()
+                        : "";
+
 
                 if (!area) {
                     return;
                 }
+
 
                 const message =
                     "Hello StreamSync Net, I would like to check internet coverage in " +
                     area +
                     ".";
 
+
                 const whatsappURL =
                     "https://wa.me/254113916614?text=" +
                     encodeURIComponent(message);
+
 
                 window.open(
                     whatsappURL,
@@ -241,12 +336,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
     /* =====================================================
        CONTACT FORM
     ===================================================== */
 
     const contactForm =
-        document.querySelector(".contact-form");
+        document.querySelector(
+            ".contact-form"
+        );
+
 
     if (contactForm) {
 
@@ -256,40 +355,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 event.preventDefault();
 
+
+                const inputs =
+                    contactForm.querySelectorAll(
+                        "input"
+                    );
+
+
                 const name =
-                    contactForm
-                        .querySelector(
-                            'input[placeholder="Full Name"]'
-                        )?.value.trim() || "";
+                    inputs[0]
+                        ? inputs[0].value.trim()
+                        : "";
+
 
                 const phone =
-                    contactForm
-                        .querySelector(
-                            'input[placeholder="Phone Number"]'
-                        )?.value.trim() || "";
+                    inputs[1]
+                        ? inputs[1].value.trim()
+                        : "";
+
 
                 const location =
-                    contactForm
-                        .querySelector(
-                            'input[placeholder="Your Location"]'
-                        )?.value.trim() || "";
+                    inputs[2]
+                        ? inputs[2].value.trim()
+                        : "";
+
 
                 const packageSelect =
                     contactForm.querySelector(
                         "select"
                     );
 
+
                 const selectedPackage =
                     packageSelect
                         ? packageSelect.options[
                             packageSelect.selectedIndex
-                          ].text
+                        ].text
                         : "";
+
 
                 const textarea =
                     contactForm.querySelector(
                         "textarea"
                     );
+
 
                 const messageText =
                     textarea
@@ -315,16 +424,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     "%0A" +
 
                     "Package: " +
-                    encodeURIComponent(selectedPackage) +
+                    encodeURIComponent(
+                        selectedPackage
+                    ) +
                     "%0A" +
 
                     "Message: " +
-                    encodeURIComponent(messageText);
+                    encodeURIComponent(
+                        messageText
+                    );
 
 
                 const whatsappURL =
                     "https://wa.me/254113916614?text=" +
                     message;
+
 
                 window.open(
                     whatsappURL,
@@ -336,4 +450,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-}); 
+
+
+    /* =====================================================
+       CUSTOMER AUTHENTICATION
+    ===================================================== */
+
+    const loginForm =
+        document.getElementById(
+            "customer-login-form"
+        );
+
+
+    const registerForm =
+        document.getElementById(
+            "customer-register-form"
+        );
+
+
+    const authSwitch =
+        document.getElementById(
+            "auth-switch"
+        ); 
