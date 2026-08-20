@@ -1,195 +1,141 @@
-// =========================================================
-// STREAMSYNC NET
-// Main JavaScript
-// =========================================================
+/* =========================================================
+   STREAMSYNC NET
+   Main JavaScript
+   ========================================================= */
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// =========================
-// MOBILE MENU
-// =========================
+    /* =====================================================
+       MOBILE MENU
+    ===================================================== */
 
-const navigation = document.querySelector(".navigation");
-const navActions = document.querySelector(".nav-actions");
-const header = document.querySelector(".header");
+    const header = document.querySelector(".header");
+    const navigation = document.querySelector(".navigation");
+    const navActions = document.querySelector(".nav-actions");
 
+    if (header && navigation) {
 
-// Create mobile menu button
-const menuButton = document.createElement("button");
+        const menuButton = document.createElement("button");
 
-menuButton.className = "mobile-menu-btn";
-menuButton.innerHTML = "☰";
-menuButton.setAttribute("aria-label", "Open menu");
+        menuButton.className = "mobile-menu-btn";
 
-
-// Add menu button to header
-const navContainer = document.querySelector(".nav-container");
-
-if (navContainer) {
-    navContainer.insertBefore(menuButton, navigation);
-}
-
-
-// Toggle mobile menu
-menuButton.addEventListener("click", () => {
-
-    navigation.classList.toggle("mobile-active");
-    navActions.classList.toggle("mobile-active");
-
-    menuButton.innerHTML =
-        navigation.classList.contains("mobile-active")
-            ? "✕"
-            : "☰";
-
-});
-
-
-// Close menu after clicking a link
-const navigationLinks =
-    document.querySelectorAll(".navigation a");
-
-navigationLinks.forEach(link => {
-
-    link.addEventListener("click", () => {
-
-        navigation.classList.remove("mobile-active");
-        navActions.classList.remove("mobile-active");
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
 
         menuButton.innerHTML = "☰";
 
-    });
+        const navContainer =
+            header.querySelector(".nav-container");
 
-});
+        if (navContainer) {
+            navContainer.appendChild(menuButton);
+        }
+
+        menuButton.addEventListener("click", function () {
+
+            navigation.classList.toggle("mobile-active");
+
+            if (navActions) {
+                navActions.classList.toggle("mobile-active");
+            }
+
+            const menuOpen =
+                navigation.classList.contains("mobile-active");
+
+            menuButton.innerHTML =
+                menuOpen ? "✕" : "☰";
+
+        });
 
 
-// =========================
-// HEADER SCROLL EFFECT
-// =========================
+        /* Close menu after clicking a navigation link */
 
-window.addEventListener("scroll", () => {
+        const navigationLinks =
+            navigation.querySelectorAll("a");
 
-    if (window.scrollY > 30) {
+        navigationLinks.forEach(function (link) {
 
-        header.classList.add("scrolled");
+            link.addEventListener("click", function () {
 
-    } else {
+                navigation.classList.remove(
+                    "mobile-active"
+                );
 
-        header.classList.remove("scrolled");
+                if (navActions) {
+                    navActions.classList.remove(
+                        "mobile-active"
+                    );
+                }
+
+                menuButton.innerHTML = "☰";
+
+            });
+
+        });
 
     }
 
-});
 
+    /* =====================================================
+       HEADER SCROLL EFFECT
+    ===================================================== */
 
-// =========================
-// PACKAGE BUTTONS
-// =========================
+    const handleHeaderScroll = function () {
 
-const packageButtons =
-    document.querySelectorAll(".package-btn");
+        const currentHeader =
+            document.querySelector(".header");
 
-const packageSelect =
-    document.querySelector(".contact-form select");
+        if (!currentHeader) return;
 
-packageButtons.forEach((button, index) => {
+        if (window.scrollY > 30) {
 
-    button.addEventListener("click", () => {
+            currentHeader.classList.add("scrolled");
 
-        const packages = [
-            "3mbps",
-            "5mbps",
-            "7mbps"
-        ];
+        } else {
 
-        if (packageSelect) {
-            packageSelect.value = packages[index];
-        }
-
-    });
-
-});
-
-
-// =========================
-// CONTACT FORM
-// =========================
-
-const contactForm =
-    document.querySelector(".contact-form");
-
-if (contactForm) {
-
-    contactForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const name =
-            this.querySelector('input[type="text"]').value;
-
-        alert(
-            `Thank you ${name}! Your StreamSync Net request has been received. We will contact you soon.`
-        );
-
-        this.reset();
-
-    });
-
-}
-
-
-// =========================
-// COVERAGE FORM
-// =========================
-
-const coverageForm =
-    document.querySelector(".coverage-form");
-
-if (coverageForm) {
-
-    coverageForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const location =
-            this.querySelector("input").value.trim();
-
-        if (!location) {
-
-            alert("Please enter your location.");
-
-            return;
+            currentHeader.classList.remove("scrolled");
 
         }
 
-        alert(
-            `Thanks! We received your coverage request for ${location}. Please contact StreamSync Net to confirm availability.`
-        );
+    };
 
-        this.reset();
+    window.addEventListener(
+        "scroll",
+        handleHeaderScroll
+    );
 
-    });
-
-}
+    handleHeaderScroll();
 
 
-// =========================
-// SMOOTH SCROLL
-// =========================
+    /* =====================================================
+       SMOOTH SCROLL
+    ===================================================== */
 
-document.querySelectorAll('a[href^="#"]').forEach(link => {
+    const anchorLinks =
+        document.querySelectorAll('a[href^="#"]');
 
-    link.addEventListener("click", function(event) {
+    anchorLinks.forEach(function (link) {
 
-        const targetId =
-            this.getAttribute("href");
+        link.addEventListener("click", function (event) {
 
-        if (targetId === "#") {
-            return;
-        }
+            const targetId =
+                this.getAttribute("href");
 
-        const target =
-            document.querySelector(targetId);
+            if (
+                !targetId ||
+                targetId === "#"
+            ) {
+                return;
+            }
 
-        if (target) {
+            const target =
+                document.querySelector(targetId);
+
+            if (!target) {
+                return;
+            }
 
             event.preventDefault();
 
@@ -198,50 +144,196 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
                 block: "start"
             });
 
-        }
+        });
 
     });
 
-});
+
+    /* =====================================================
+       REVEAL ANIMATION
+    ===================================================== */
+
+    const revealElements =
+        document.querySelectorAll(
+            ".package-card, .service-card, .benefit-card, .step"
+        );
+
+    const revealObserver =
+        new IntersectionObserver(
+            function (entries) {
+
+                entries.forEach(function (entry) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add(
+                            "revealed"
+                        );
+
+                        revealObserver.unobserve(
+                            entry.target
+                        );
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.12
+            }
+        );
 
 
-// =========================
-// SIMPLE REVEAL ANIMATION
-// =========================
+    revealElements.forEach(function (element) {
 
-const revealElements =
-    document.querySelectorAll(
-        ".package-card, .service-card, .step, .benefit-card"
-    );
+        element.classList.add("reveal");
+
+        revealObserver.observe(element);
+
+    });
 
 
-const revealObserver =
-    new IntersectionObserver(
-        (entries, observer) => {
+    /* =====================================================
+       COVERAGE FORM
+    ===================================================== */
 
-            entries.forEach(entry => {
+    const coverageForm =
+        document.querySelector(".coverage-form");
 
-                if (entry.isIntersecting) {
+    if (coverageForm) {
 
-                    entry.target.classList.add("revealed");
+        coverageForm.addEventListener(
+            "submit",
+            function (event) {
 
-                    observer.unobserve(entry.target);
+                event.preventDefault();
 
+                const input =
+                    coverageForm.querySelector(
+                        "input"
+                    );
+
+                const area =
+                    input ? input.value.trim() : "";
+
+                if (!area) {
+                    return;
                 }
 
-            });
+                const message =
+                    "Hello StreamSync Net, I would like to check internet coverage in " +
+                    area +
+                    ".";
 
-        },
-        {
-            threshold: 0.12
-        }
-    );
+                const whatsappURL =
+                    "https://wa.me/254113916614?text=" +
+                    encodeURIComponent(message);
+
+                window.open(
+                    whatsappURL,
+                    "_blank"
+                );
+
+            }
+        );
+
+    }
 
 
-revealElements.forEach(element => {
+    /* =====================================================
+       CONTACT FORM
+    ===================================================== */
 
-    element.classList.add("reveal");
+    const contactForm =
+        document.querySelector(".contact-form");
 
-    revealObserver.observe(element);
+    if (contactForm) {
 
-});
+        contactForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                const name =
+                    contactForm
+                        .querySelector(
+                            'input[placeholder="Full Name"]'
+                        )?.value.trim() || "";
+
+                const phone =
+                    contactForm
+                        .querySelector(
+                            'input[placeholder="Phone Number"]'
+                        )?.value.trim() || "";
+
+                const location =
+                    contactForm
+                        .querySelector(
+                            'input[placeholder="Your Location"]'
+                        )?.value.trim() || "";
+
+                const packageSelect =
+                    contactForm.querySelector(
+                        "select"
+                    );
+
+                const selectedPackage =
+                    packageSelect
+                        ? packageSelect.options[
+                            packageSelect.selectedIndex
+                          ].text
+                        : "";
+
+                const textarea =
+                    contactForm.querySelector(
+                        "textarea"
+                    );
+
+                const messageText =
+                    textarea
+                        ? textarea.value.trim()
+                        : "";
+
+
+                const message =
+                    "Hello StreamSync Net,%0A%0A" +
+
+                    "I would like to get connected.%0A%0A" +
+
+                    "Name: " +
+                    encodeURIComponent(name) +
+                    "%0A" +
+
+                    "Phone: " +
+                    encodeURIComponent(phone) +
+                    "%0A" +
+
+                    "Location: " +
+                    encodeURIComponent(location) +
+                    "%0A" +
+
+                    "Package: " +
+                    encodeURIComponent(selectedPackage) +
+                    "%0A" +
+
+                    "Message: " +
+                    encodeURIComponent(messageText);
+
+
+                const whatsappURL =
+                    "https://wa.me/254113916614?text=" +
+                    message;
+
+                window.open(
+                    whatsappURL,
+                    "_blank"
+                );
+
+            }
+        );
+
+    }
+
+}); 
