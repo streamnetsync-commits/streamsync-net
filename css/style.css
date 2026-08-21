@@ -2065,3 +2065,26 @@ textarea {
     }
 
 }
+/* =========================================================
+   CUSTOMER LOGIN / REGISTER SWITCH
+========================================================= */
+
+.portal-note {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-switch-btn {
+    border: none;
+    background: transparent;
+    color: #1689e8;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 6px;
+    margin-left: 4px;
+}
+
+.auth-switch-btn:hover {
+    text-decoration: underline;
+}
