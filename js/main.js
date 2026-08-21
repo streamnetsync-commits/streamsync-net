@@ -1,4 +1,4 @@
-/* =========================================================
+ /* =========================================================
    STREAMSYNC NET
    MAIN.JS
 ========================================================= */
@@ -8,10 +8,21 @@
    SUPABASE CONFIGURATION
 ========================================================= */
 
-const SUPABASE_URL = ;https://fqtazfpjillszhqobizm.supabase.co/
+/*
+   IMPORTANT:
+   Keep your REAL Supabase values here.
+
+   Example:
+
+   const SUPABASE_URL = "https://your-project.supabase.co";
+
+   const SUPABASE_PUBLISHABLE_KEY = "your-publishable-key";
+*/
+
+const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
 
 const SUPABASE_PUBLISHABLE_KEY =
-    "";sb_publishable_0h1jh2AYl5BbE3G1a0gzbQ_vJa4tP68
+    "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
 
 
 const supabaseClient =
@@ -66,7 +77,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (navContainer) {
-            navContainer.appendChild(menuButton);
+
+            navContainer.appendChild(
+                menuButton
+            );
+
         }
 
 
@@ -123,7 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
 
-                        menuButton.innerHTML = "☰";
+                        menuButton.innerHTML =
+                            "☰";
 
                     }
                 );
@@ -192,11 +208,21 @@ document.addEventListener("DOMContentLoaded", function () {
                         this.getAttribute("href");
 
 
+                    /*
+                     * IMPORTANT:
+                     * Prevent href="#" from sending
+                     * the page back to the top.
+                     */
+
                     if (
                         !targetId ||
                         targetId === "#"
                     ) {
+
+                        event.preventDefault();
+
                         return;
+
                     }
 
 
@@ -215,8 +241,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                     target.scrollIntoView({
+
                         behavior: "smooth",
+
                         block: "start"
+
                     });
 
                 }
@@ -227,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CUSTOMER LOGIN / REGISTER SWITCH
+       CUSTOMER LOGIN / REGISTER ELEMENTS
     ===================================================== */
 
     const loginForm =
@@ -276,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showAuthMessage(
         message,
-        type
+        type = "info"
     ) {
 
         if (!authMessage) {
@@ -346,7 +375,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         authSwitch.addEventListener(
             "click",
-            function () {
+            function (event) {
+
+                /*
+                 * THIS IS THE IMPORTANT FIX.
+                 *
+                 * Your original HTML has:
+                 *
+                 * <a href="#" id="auth-switch">
+                 *
+                 * Without preventDefault(), clicking
+                 * Create Account can jump to the top
+                 * of the page.
+                 */
+
+                event.preventDefault();
+
 
                 registrationMode =
                     !registrationMode;
@@ -360,9 +404,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                if (registrationMode) {
 
-                    /* SHOW REGISTER */
+                /* =========================================
+                   REGISTER MODE
+                ========================================= */
+
+                if (registrationMode) {
 
                     if (loginForm) {
 
@@ -401,9 +448,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 }
 
-                else {
 
-                    /* SHOW LOGIN */
+
+                /* =========================================
+                   LOGIN MODE
+                ========================================= */
+
+                else {
 
                     if (loginForm) {
 
@@ -459,51 +510,42 @@ document.addEventListener("DOMContentLoaded", function () {
             "submit",
             async function (event) {
 
+                /*
+                 * Prevent the form from refreshing
+                 * or navigating away from the page.
+                 */
+
                 event.preventDefault();
 
 
-                const name =
-                    document
-                        .getElementById(
-                            "register-name"
-                        )
-                        .value
-                        .trim();
+                const nameElement =
+                    document.getElementById(
+                        "register-name"
+                    );
 
 
-                const email =
-                    document
-                        .getElementById(
-                            "register-email"
-                        )
-                        .value
-                        .trim();
+                const emailElement =
+                    document.getElementById(
+                        "register-email"
+                    );
 
 
-                const phone =
-                    document
-                        .getElementById(
-                            "register-phone"
-                        )
-                        .value
-                        .trim();
+                const phoneElement =
+                    document.getElementById(
+                        "register-phone"
+                    );
 
 
-                const location =
-                    document
-                        .getElementById(
-                            "register-location"
-                        )
-                        .value
-                        .trim();
+                const locationElement =
+                    document.getElementById(
+                        "register-location"
+                    );
 
 
-                const password =
-                    document
-                        .getElementById(
-                            "register-password"
-                        )
-                        .value;
+                const passwordElement =
+                    document.getElementById(
+                        "register-password"
+                    );
 
 
                 const packageSelect =
@@ -513,12 +555,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 if (
+                    !nameElement ||
+                    !emailElement ||
+                    !phoneElement ||
+                    !locationElement ||
+                    !passwordElement ||
+                    !packageSelect
+                ) {
+
+                    showAuthMessage(
+                        "Registration form could not be loaded correctly.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const name =
+                    nameElement.value.trim();
+
+
+                const email =
+                    emailElement.value.trim();
+
+
+                const phone =
+                    phoneElement.value.trim();
+
+
+                const location =
+                    locationElement.value.trim();
+
+
+                const password =
+                    passwordElement.value;
+
+
+                if (
                     !name ||
                     !email ||
                     !phone ||
                     !location ||
                     !password ||
-                    !packageSelect ||
                     !packageSelect.value
                 ) {
 
@@ -574,7 +654,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 try {
 
-
                     /* =====================================
                        CREATE SUPABASE AUTH ACCOUNT
                     ===================================== */
@@ -584,7 +663,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             email: email,
 
-                            password: password
+                            password: password,
+
+                            options: {
+
+                                data: {
+
+                                    full_name: name,
+
+                                    phone: phone,
+
+                                    location: location,
+
+                                    package_name:
+                                        packageName,
+
+                                    package_speed:
+                                        speed,
+
+                                    monthly_price:
+                                        price
+
+                                }
+
+                            }
 
                         });
 
@@ -598,6 +700,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const user =
                         result.data.user;
+
+
+                    const session =
+                        result.data.session;
 
 
                     if (!user) {
@@ -614,65 +720,140 @@ document.addEventListener("DOMContentLoaded", function () {
                        SAVE CUSTOMER INFORMATION
                     ===================================== */
 
-                    const customerData = {
+                    /*
+                     * If email confirmation is enabled,
+                     * Supabase may create the user without
+                     * creating a session immediately.
+                     *
+                     * In that situation we do NOT attempt
+                     * an unauthenticated database insert.
+                     */
 
-                        id: user.id,
+                    if (session) {
 
-                        full_name: name,
+                        const customerData = {
 
-                        phone: phone,
+                            id: user.id,
 
-                        location: location,
+                            full_name: name,
 
-                        package_name: packageName,
+                            phone: phone,
 
-                        package_speed: speed,
+                            location: location,
 
-                        monthly_price: price,
+                            package_name: packageName,
 
-                        connection_status: "pending"
+                            package_speed: speed,
 
-                    };
+                            monthly_price: price,
+
+                            connection_status:
+                                "pending"
+
+                        };
 
 
-                    const customerResult =
-                        await supabaseClient
-                            .from("customers")
-                            .insert(
-                                customerData
+                        const customerResult =
+                            await supabaseClient
+                                .from("customers")
+                                .upsert(
+                                    customerData
+                                );
+
+
+                        if (
+                            customerResult.error
+                        ) {
+
+                            console.error(
+                                "Customer database error:",
+                                customerResult.error
                             );
 
 
-                    if (customerResult.error) {
+                            showAuthMessage(
+                                "Your account was created, but your customer information could not be saved. Please contact StreamSync Net.",
+                                "error"
+                            );
 
-                        console.error(
-                            "Customer database error:",
-                            customerResult.error
-                        );
+                            return;
 
-
-                        showAuthMessage(
-                            "Your login account was created, but your customer information could not be saved. Please contact StreamSync Net.",
-                            "error"
-                        );
-
-                        return;
+                        }
 
                     }
 
 
 
                     /* =====================================
-                       SUCCESS
+                       REGISTRATION SUCCESS
                     ===================================== */
 
+                    registerForm.reset();
+
+
                     showAuthMessage(
-                        "Account created successfully! Check your email if confirmation is required, then log in.",
+                        session
+                            ? "Account created successfully! You can now use your StreamSync Net account."
+                            : "Account created successfully! Please check your email to confirm your account, then return here and log in.",
                         "success"
                     );
 
 
-                    registerForm.reset();
+                    /*
+                     * IMPORTANT:
+                     * We DO NOT redirect the customer.
+                     *
+                     * The customer remains on the
+                     * Customer Portal section.
+                     */
+
+
+                    if (session) {
+
+                        registrationMode =
+                            false;
+
+
+                        if (loginForm) {
+
+                            loginForm.style.display =
+                                "flex";
+
+                        }
+
+
+                        if (registerForm) {
+
+                            registerForm.style.display =
+                                "none";
+
+                        }
+
+
+                        if (authSwitchText) {
+
+                            authSwitchText.textContent =
+                                "Don't have an account?";
+
+                        }
+
+
+                        if (authSwitch) {
+
+                            authSwitch.textContent =
+                                "Create Account";
+
+                        }
+
+
+                        if (authDescription) {
+
+                            authDescription.textContent =
+                                "Log in to your StreamSync Net account.";
+
+                        }
+
+                    }
 
 
                 }
@@ -713,21 +894,39 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
 
 
+                const emailElement =
+                    document.getElementById(
+                        "login-email"
+                    );
+
+
+                const passwordElement =
+                    document.getElementById(
+                        "login-password"
+                    );
+
+
+                if (
+                    !emailElement ||
+                    !passwordElement
+                ) {
+
+                    showAuthMessage(
+                        "Login form could not be loaded correctly.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
                 const email =
-                    document
-                        .getElementById(
-                            "login-email"
-                        )
-                        .value
-                        .trim();
+                    emailElement.value.trim();
 
 
                 const password =
-                    document
-                        .getElementById(
-                            "login-password"
-                        )
-                        .value;
+                    passwordElement.value;
 
 
                 if (!email || !password) {
@@ -845,6 +1044,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       AUTH STATE CHANGE
+    ===================================================== */
+
+    supabaseClient.auth.onAuthStateChange(
+        function (event, session) {
+
+            console.log(
+                "Authentication event:",
+                event
+            );
+
+
+            if (session) {
+
+                console.log(
+                    "Customer session is active."
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
        COVERAGE FORM
     ===================================================== */
 
@@ -879,7 +1104,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 if (!area) {
+
                     return;
+
                 }
 
 
@@ -891,7 +1118,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const url =
                     "https://wa.me/254113916614?text=" +
-                    encodeURIComponent(message);
+                    encodeURIComponent(
+                        message
+                    );
 
 
                 window.open(
@@ -907,7 +1136,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CONTACT FORM
+       CONTACT / INSTALLATION FORM
     ===================================================== */
 
     const contactForm =
@@ -925,27 +1154,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
 
 
-                const fields =
+                const inputs =
                     contactForm.querySelectorAll(
                         "input"
                     );
 
 
                 const name =
-                    fields[0]
-                        ? fields[0].value.trim()
+                    inputs[0]
+                        ? inputs[0].value.trim()
                         : "";
 
 
                 const phone =
-                    fields[1]
-                        ? fields[1].value.trim()
+                    inputs[1]
+                        ? inputs[1].value.trim()
                         : "";
 
 
                 const location =
-                    fields[2]
-                        ? fields[2].value.trim()
+                    inputs[2]
+                        ? inputs[2].value.trim()
                         : "";
 
 
@@ -972,4 +1201,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const additionalInfo =
                     textarea
-                        ? textarea.value.trim() 
+                        ? textarea.value.trim()
+                        : "";
+
+
+                if (
+                    !name ||
+                    !phone ||
+                    !location ||
+                    !packageSelect ||
+                    !packageSelect.value
+                ) {
+
+                    alert(
+                        "Please complete all required fields."
+                    );
+
+                    return;
+
+                }
+
+
+                let message =
+                    "Hello StreamSync Net!%0A%0A" +
+
+                    "I would like to request internet installation.%0A%0A" +
+
+                    "Name: " +
+                    encodeURIComponent(name) +
+
+                    "%0APhone: " +
+                    encodeURIComponent(phone) +
+
+                    "%0ALocation: " +
+                    encodeURIComponent(location) +
+
+                    "%0APackage: " +
+                    encodeURIComponent(packageName);
+
+
+                if (additionalInfo) {
+
+                    message +=
+                        "%0AAdditional Information: " +
+                        encodeURIComponent(
+                            additionalInfo
+                        );
+
+                }
+
+
+                const whatsappUrl =
+                    "https://wa.me/254113916614?text=" +
+                    message;
+
+
+                window.open(
+                    whatsappUrl,
+                    "_blank"
+                );
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       LOG CURRENT PAGE
+    ===================================================== */
+
+    console.log(
+        "StreamSync Net JavaScript loaded successfully."
+    );
+
+});
