@@ -1277,3 +1277,132 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 });
+/* =========================================================
+   CUSTOMER LOGIN / REGISTER TOGGLE
+========================================================= */
+
+function toggleCustomerAuth() {
+
+    const loginForm = document.getElementById(
+        "customer-login-form"
+    );
+
+    const registerForm = document.getElementById(
+        "customer-register-form"
+    );
+
+    const authSwitch = document.getElementById(
+        "auth-switch"
+    );
+
+    const authSwitchText = document.getElementById(
+        "auth-switch-text"
+    );
+
+    const authDescription = document.getElementById(
+        "auth-description"
+    );
+
+    const authMessage = document.getElementById(
+        "auth-message"
+    );
+
+
+    if (!loginForm || !registerForm) {
+
+        console.error(
+            "Login or registration form was not found."
+        );
+
+        return;
+    }
+
+
+    const registrationOpen =
+        registerForm.style.display !== "none";
+
+
+    if (registrationOpen) {
+
+        /* ==============================
+           SHOW LOGIN
+        ============================== */
+
+        loginForm.style.display = "flex";
+
+        registerForm.style.display = "none";
+
+
+        if (authSwitchText) {
+
+            authSwitchText.textContent =
+                "Don't have an account?";
+
+        }
+
+
+        if (authSwitch) {
+
+            authSwitch.textContent =
+                "Create Account";
+
+        }
+
+
+        if (authDescription) {
+
+            authDescription.textContent =
+                "Log in to your StreamSync Net account.";
+
+        }
+
+    }
+
+    else {
+
+        /* ==============================
+           SHOW REGISTRATION
+        ============================== */
+
+        loginForm.style.display = "none";
+
+        registerForm.style.display = "flex";
+
+
+        if (authSwitchText) {
+
+            authSwitchText.textContent =
+                "Already have an account?";
+
+        }
+
+
+        if (authSwitch) {
+
+            authSwitch.textContent =
+                "Login";
+
+        }
+
+
+        if (authDescription) {
+
+            authDescription.textContent =
+                "Create your StreamSync Net customer account.";
+
+        }
+
+    }
+
+
+    /* Clear previous message */
+
+    if (authMessage) {
+
+        authMessage.style.display = "none";
+
+        authMessage.textContent = "";
+
+    }
+
+}
